@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Toy Time! 玩具时间 🎉</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Noto+Sans+SC:wght@500;700&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --coral:#FF6F61;
+    --sky:#3FA9F5;
+    --sun:#FFD166;
+    --grass:#06D6A0;
+    --purple:#9B5DE5;
+    --cream:#FFF9EE;
+    --ink:#33313A;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--cream);
+    font-family:'Nunito',sans-serif;
+    color:var(--ink);
+    padding-bottom:60px;
+  }
+  h1,h2,h3{font-family:'Baloo 2',cursive;margin:0;}
+  .zh{font-family:'Noto Sans SC',sans-serif;}
+
+  /* ---------- BALLOON HEADER ---------- */
+  .balloon-row{
+    display:flex;
+    justify-content:center;
+    gap:14px;
+    padding-top:16px;
+    flex-wrap:wrap;
+  }
+  .balloon-row span{font-size:34px;}
+
+  header{
+    text-align:center;
+    padding:6px 20px 30px;
+  }
+  header h1{
+    font-size:clamp(32px,8vw,50px);
+    color:var(--coral);
+    text-shadow:3px 3px 0 rgba(0,0,0,0.06);
+  }
+  header .zh-title{
+    font-size:clamp(20px,5vw,28px);
+    font-weight:700;
+    color:var(--purple);
+    margin-top:2px;
+  }
+  header p{
+    font-family:'Baloo 2';
+    font-size:16px;
+    color:#7a7580;
+    margin-top:8px;
+  }
+
+  /* ---------- PROGRESS BALLOONS ---------- */
+  .progress-wrap{
+    max-width:760px;
+    margin:0 auto;
+    background:white;
+    border-radius:20px;
+    box-shadow:0 8px 0 rgba(0,0,0,0.06);
+    padding:14px 20px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:18px;
+    flex-wrap:wrap;
+  }
+  .progress-wrap .lbl{font-family:'Baloo 2';font-weight:700;color:var(--purple);font-size:15px;}
+  .balloons-progress{display:flex;gap:10px;}
+  .prog-balloon{
+    font-size:30px;
+    opacity:0.25;
+    transition:transform .25s, opacity .25s;
+  }
+  .prog-balloon.on{opacity:1;transform:scale(1.15) translateY(-3px);}
+
+  main{
+    max-width:780px;
+    margin:26px auto;
+    padding:0 16px;
+    display:flex;
+    flex-direction:column;
+    gap:28px;
+  }
+
+  .card{
+    background:white;
+    border-radius:24px;
+    padding:24px 20px 28px;
+    box-shadow:0 6px 0 rgba(0,0,0,0.07);
+  }
+  .card h2{
+    color:var(--coral);
+    font-size:26px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .card .zh-sub{
+    font-size:16px;
+    color:var(--purple);
+    font-weight:700;
+    margin-top:2px;
+    margin-bottom:14px;
+  }
+  .instructions{
+    font-size:14.5px;
+    color:#8a8391;
+    margin-bottom:16px;
+  }
+
+  .btn{
+    font-family:'Baloo 2';
+    font-weight:700;
+    font-size:16px;
+    background:var(--coral);
+    color:white;
+    border:none;
+    border-radius:14px;
+    padding:12px 22px;
+    cursor:pointer;
+    box-shadow:0 4px 0 #d9503f;
+    transition:transform .1s;
+  }
+  .btn:active{transform:translateY(3px);box-shadow:0 1px 0 #d9503f;}
+
+  .feedback{
+    margin-top:14px;
+    font-family:'Baloo 2';
+    font-weight:700;
+    font-size:16px;
+    min-height:22px;
+  }
+  .feedback.good{color:#06a97b;}
+  .feedback.bad{color:var(--coral);}
+
+  /* ---------- EX1: FLASHCARD BROWSER ---------- */
+  .flash-zone{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:16px;
+  }
+  .flash-box{
+    width:100%;
+    max-width:340px;
+    background:linear-gradient(135deg,#FFF0E8,#FFE9F5);
+    border:3px dashed var(--sun);
+    border-radius:22px;
+    padding:26px 20px;
+    text-align:center;
+  }
+  .flash-emoji{font-size:80px;line-height:1;}
+  .flash-en{
+    font-family:'Baloo 2';
+    font-size:30px;
+    color:var(--ink);
+    margin-top:10px;
+  }
+  .flash-zh{
+    font-family:'Noto Sans SC';
+    font-weight:700;
+    font-size:22px;
+    color:var(--purple);
+    margin-top:4px;
+  }
+  .flash-pinyin{
+    font-size:14px;
+    color:#a39cae;
+    margin-top:2px;
+  }
+  .flash-nav{display:flex;align-items:center;gap:18px;}
+  .flash-nav button{
+    background:var(--sky);
+    border:none;
+    color:white;
+    width:46px;height:46px;
+    border-radius:50%;
+    font-size:20px;
+    cursor:pointer;
+    box-shadow:0 3px 0 #2c86c2;
+  }
+  .flash-counter{font-family:'Baloo 2';color:#a39cae;font-size:15px;}
+
+  /* ---------- EX2: FIND IT (multiple choice picture) ---------- */
+  .find-prompt{
+    text-align:center;
+    font-family:'Baloo 2';
+    font-size:24px;
+    color:var(--ink);
+    margin-bottom:6px;
+  }
+  .find-prompt .zh{
+    display:block;
+    font-size:17px;
+    color:var(--purple);
+    margin-top:2px;
+  }
+  .find-options{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:14px;
+    max-width:420px;
+    margin:18px auto 0;
+  }
+  .find-opt{
+    background:#F6F3FF;
+    border:3px solid transparent;
+    border-radius:18px;
+    padding:20px 10px;
+    text-align:center;
+    font-size:52px;
+    cursor:pointer;
+    transition:transform .1s, border-color .15s;
+  }
+  .find-opt:hover{transform:translateY(-3px);}
+  .find-opt.correct{border-color:var(--grass);background:#e6fbf3;}
+  .find-opt.wrong{border-color:var(--coral);background:#ffece9;}
+  .find-status{
+    text-align:center;
+    font-family:'Baloo 2';
+    color:#a39cae;
+    margin-top:16px;
+    font-size:15px;
+  }
+
+  /* ---------- EX3: MATCH GAME ---------- */
+  .match-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(90px,1fr));
+    gap:10px;
+  }
+  .match-tile{
+    background:#F6F3FF;
+    border:3px solid transparent;
+    border-radius:16px;
+    padding:14px 6px;
+    text-align:center;
+    cursor:pointer;
+    transition:all .15s;
+    min-height:64px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:15px;
+    font-family:'Baloo 2';
+    font-weight:700;
+  }
+  .match-tile.emoji-tile{font-size:38px;}
+  .match-tile.selected{border-color:var(--sun);background:#fff6e0;}
+  .match-tile.matched{border-color:var(--grass);background:#e6fbf3;opacity:0.55;cursor:default;}
+  .match-tile.shake{border-color:var(--coral);}
+
+  /* ---------- EX4: MEMORY GAME ---------- */
+  .memory-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(80px,1fr));
+    gap:10px;
+  }
+  .mem-card{
+    aspect-ratio:1/1;
+    background:var(--purple);
+    border-radius:16px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:30px;
+    color:white;
+    cursor:pointer;
+    transition:transform .2s, background .2s;
+  }
+  .mem-card.flipped{background:var(--sun);}
+  .mem-card.matched{background:var(--grass);}
+  .memory-status{
+    font-family:'Baloo 2';
+    color:var(--purple);
+    margin-top:12px;
+    font-size:15px;
+    text-align:center;
+  }
+
+  footer{
+    text-align:center;
+    font-family:'Baloo 2';
+    color:var(--purple);
+    padding:20px;
+    font-size:15px;
+  }
+
+  .confetti-layer{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:999;}
+  .confetti-piece{position:absolute;top:-20px;width:10px;height:10px;opacity:.9;animation:fall linear forwards;}
+  @keyframes fall{to{transform:translateY(110vh) rotate(360deg);opacity:1;}}
+</style>
+</head>
+<body>
+
+<div class="balloon-row">
+  <span>🎈</span><span>🎈</span><span>🎈</span><span>🎈</span><span>🎈</span>
+</div>
+
+<header>
+  <h1>Toy Time! 🎉</h1>
+  <div class="zh-title">玩具时间</div>
+  <p>Jim and Jenny's Birthday · English Practice</p>
+</header>
+
+<div class="progress-wrap">
+  <span class="lbl">My Stars 我的星星</span>
+  <div class="balloons-progress" id="progress">
+    <span class="prog-balloon" data-i="1">🎈</span>
+    <span class="prog-balloon" data-i="2">🎈</span>
+    <span class="prog-balloon" data-i="3">🎈</span>
+    <span class="prog-balloon" data-i="4">🎈</span>
+  </div>
+</div>
+
+<main>
+
+  <!-- EXERCISE 1 -->
+  <section class="card">
+    <h2>1. 👀 Look & Learn</h2>
+    <div class="zh-sub">看一看，学一学</div>
+    <p class="instructions">Tap the arrows to see each toy. Say the word out loud! 点箭头看每个玩具，大声说出来！</p>
+    <div class="flash-zone">
+      <div class="flash-box">
+        <div class="flash-emoji" id="flashEmoji"></div>
+        <div class="flash-en" id="flashEn"></div>
+        <div class="flash-zh" id="flashZh"></div>
+        <div class="flash-pinyin" id="flashPinyin"></div>
+      </div>
+      <div class="flash-nav">
+        <button onclick="prevFlash()">‹</button>
+        <span class="flash-counter" id="flashCounter">1 / 9</span>
+        <button onclick="nextFlash()">›</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXERCISE 2 -->
+  <section class="card">
+    <h2>2. 🔍 Find It!</h2>
+    <div class="zh-sub">找一找</div>
+    <p class="instructions">Tap the picture that matches the word. 点一点和单词一样的图片。</p>
+    <div class="find-prompt" id="findPrompt"></div>
+    <div class="find-options" id="findOptions"></div>
+    <div class="find-status" id="findStatus">0 / 6</div>
+  </section>
+
+  <!-- EXERCISE 3 -->
+  <section class="card">
+    <h2>3. 🔗 Match It!</h2>
+    <div class="zh-sub">连一连</div>
+    <p class="instructions">Tap a picture, then tap its English word. 先点图片，再点对应的英文单词。</p>
+    <div class="match-grid" id="matchGrid"></div>
+    <div class="feedback" id="fb3"></div>
+  </section>
+
+  <!-- EXERCISE 4 -->
+  <section class="card">
+    <h2>4. 🃏 Memory Game</h2>
+    <div class="zh-sub">记忆游戏</div>
+    <p class="instructions">Flip two cards to find the matching pairs. 翻两张卡片，找到相同的一对。</p>
+    <div class="memory-grid" id="memoryGrid"></div>
+    <div class="memory-status" id="memoryStatus">Pairs found: 0 / 6</div>
+  </section>
+
+</main>
+
+<footer>🎂 Great job! 做得好！🎂</footer>
+
+<script>
+const TOYS = [
+  {en:"toy",   zh:"玩具",   py:"wánjù",    emoji:"🎁"},
+  {en:"plane", zh:"飞机",   py:"fēijī",    emoji:"✈️"},
+  {en:"kite",  zh:"风筝",   py:"fēngzheng",emoji:"🪁"},
+  {en:"doll",  zh:"洋娃娃", py:"yángwáwa", emoji:"🪆"},
+  {en:"ball",  zh:"球",     py:"qiú",      emoji:"⚽"},
+  {en:"house", zh:"房子",   py:"fángzi",   emoji:"🏠"},
+  {en:"car",   zh:"玩具车", py:"wánjùchē", emoji:"🚗"},
+  {en:"robot", zh:"机器人", py:"jīqìrén",  emoji:"🤖"},
+  {en:"bike",  zh:"自行车", py:"zìxíngchē",emoji:"🚲"},
+];
+// core 8 items used for games (excludes the general word "toy")
+const CORE = TOYS.slice(1);
+
+function shuffle(arr){ return [...arr].sort(()=>Math.random()-0.5); }
+
+/* ---------- PROGRESS ---------- */
+let starsOn = 0;
+function earnStar(n){
+  if(n<=starsOn) return;
+  starsOn = n;
+  document.querySelectorAll('.prog-balloon').forEach(b=>{
+    if(parseInt(b.dataset.i)<=starsOn) b.classList.add('on');
+  });
+  launchConfetti();
+}
+function launchConfetti(){
+  const layer = document.createElement('div');
+  layer.className='confetti-layer';
+  document.body.appendChild(layer);
+  const colors=['#FF6F61','#3FA9F5','#FFD166','#06D6A0','#9B5DE5'];
+  for(let i=0;i<40;i++){
+    const p=document.createElement('div');
+    p.className='confetti-piece';
+    p.style.left=Math.random()*100+'vw';
+    p.style.background=colors[Math.floor(Math.random()*colors.length)];
+    p.style.animationDuration=(2+Math.random()*1.5)+'s';
+    p.style.borderRadius=Math.random()>0.5?'50%':'2px';
+    layer.appendChild(p);
+  }
+  setTimeout(()=>layer.remove(),3600);
+}
+
+/* ---------- EXERCISE 1: FLASHCARDS ---------- */
+let flashIdx = 0;
+function renderFlash(){
+  const t = TOYS[flashIdx];
+  document.getElementById('flashEmoji').textContent = t.emoji;
+  document.getElementById('flashEn').textContent = t.en;
+  document.getElementById('flashZh').textContent = t.zh;
+  document.getElementById('flashPinyin').textContent = t.py;
+  document.getElementById('flashCounter').textContent = `${flashIdx+1} / ${TOYS.length}`;
+}
+function nextFlash(){
+  flashIdx = (flashIdx+1) % TOYS.length;
+  renderFlash();
+  if(flashIdx === TOYS.length-1) earnStar(1);
+}
+function prevFlash(){
+  flashIdx = (flashIdx-1+TOYS.length) % TOYS.length;
+  renderFlash();
+}
+renderFlash();
+
+/* ---------- EXERCISE 2: FIND IT ---------- */
+const findRounds = shuffle(CORE).slice(0,6);
+let findIdx = 0;
+let findScore = 0;
+function renderFind(){
+  const findPrompt = document.getElementById('findPrompt');
+  const findOptions = document.getElementById('findOptions');
+  findOptions.innerHTML = '';
+  if(findIdx >= findRounds.length){
+    findPrompt.innerHTML = `🎉 All done! <span class="zh">全部完成！</span>`;
+    document.getElementById('findStatus').textContent = `Score: ${findScore} / ${findRounds.length}`;
+    if(findScore === findRounds.length) earnStar(2);
+    return;
+  }
+  const target = findRounds[findIdx];
+  findPrompt.innerHTML = `Find: <b>${target.en}</b><span class="zh">找一找：${target.zh}</span>`;
+  const wrongPool = shuffle(CORE.filter(t=>t.en!==target.en)).slice(0,3);
+  const options = shuffle([target, ...wrongPool]);
+  options.forEach(opt=>{
+    const div = document.createElement('div');
+    div.className='find-opt';
+    div.textContent = opt.emoji;
+    div.onclick = ()=>{
+      document.querySelectorAll('.find-opt').forEach(o=>o.style.pointerEvents='none');
+      if(opt.en === target.en){
+        div.classList.add('correct');
+        findScore++;
+      } else {
+        div.classList.add('wrong');
+        document.querySelectorAll('.find-opt').forEach(o=>{
+          if(o.textContent === target.emoji) o.classList.add('correct');
+        });
+      }
+      document.getElementById('findStatus').textContent = `${findIdx+1} / ${findRounds.length}`;
+      setTimeout(()=>{ findIdx++; renderFind(); }, 700);
+    };
+    findOptions.appendChild(div);
+  });
+}
+renderFind();
+
+/* ---------- EXERCISE 3: MATCH ---------- */
+const matchItems = shuffle(CORE).slice(0,6);
+const matchGrid = document.getElementById('matchGrid');
+let selectedMatch = null;
+let matchedCount = 0;
+
+const allTiles = shuffle([
+  ...matchItems.map(t=>({type:'emoji', display:t.emoji, key:t.en})),
+  ...matchItems.map(t=>({type:'word', display:t.en, key:t.en}))
+]);
+
+allTiles.forEach(tile=>{
+  const d = document.createElement('div');
+  d.className = 'match-tile' + (tile.type==='emoji' ? ' emoji-tile' : '');
+  d.textContent = tile.display;
+  d.dataset.key = tile.key;
+  d.dataset.type = tile.type;
+  d.onclick = ()=>selectMatchTile(d);
+  matchGrid.appendChild(d);
+});
+
+function selectMatchTile(el){
+  if(el.classList.contains('matched')) return;
+  if(!selectedMatch){
+    selectedMatch = el;
+    el.classList.add('selected');
+    return;
+  }
+  if(selectedMatch === el) return;
+  if(selectedMatch.dataset.type !== el.dataset.type && selectedMatch.dataset.key === el.dataset.key){
+    selectedMatch.classList.remove('selected'); selectedMatch.classList.add('matched');
+    el.classList.add('matched');
+    matchedCount++;
+    const fb = document.getElementById('fb3');
+    if(matchedCount === matchItems.length){
+      fb.textContent = "Great matching! 太棒了！ 🌟";
+      fb.className='feedback good';
+      earnStar(3);
+    } else {
+      fb.textContent = `${matchedCount} / ${matchItems.length} matched`;
+      fb.className='feedback';
+    }
+    selectedMatch = null;
+  } else {
+    el.classList.add('shake');
+    selectedMatch.classList.add('shake');
+    setTimeout(()=>{
+      el.classList.remove('shake');
+      selectedMatch.classList.remove('selected','shake');
+      selectedMatch = null;
+    }, 450);
+  }
+}
+
+/* ---------- EXERCISE 4: MEMORY GAME ---------- */
+const memoryItems = shuffle(CORE).slice(0,6);
+let memCards = [];
+memoryItems.forEach((t,i)=>{
+  memCards.push({id:i+'a', pair:i, display:t.emoji});
+  memCards.push({id:i+'b', pair:i, display:t.en});
+});
+memCards = shuffle(memCards);
+
+const memoryGrid = document.getElementById('memoryGrid');
+let memFlipped = [];
+let memMatches = 0;
+let memLock = false;
+
+memCards.forEach(card=>{
+  const el = document.createElement('div');
+  el.className='mem-card';
+  el.dataset.pair = card.pair;
+  el.dataset.state = 'hidden';
+  el.textContent = '❓';
+  el.onclick = ()=>flipMem(el, card);
+  memoryGrid.appendChild(el);
+});
+
+function flipMem(el, card){
+  if(memLock || el.dataset.state !== 'hidden') return;
+  el.textContent = card.display;
+  el.classList.add('flipped');
+  el.dataset.state = 'flipped';
+  memFlipped.push({el, card});
+
+  if(memFlipped.length === 2){
+    memLock = true;
+    const [f1,f2] = memFlipped;
+    if(f1.card.pair === f2.card.pair){
+      f1.el.classList.add('matched'); f1.el.classList.remove('flipped');
+      f2.el.classList.add('matched'); f2.el.classList.remove('flipped');
+      f1.el.dataset.state='matched'; f2.el.dataset.state='matched';
+      memMatches++;
+      document.getElementById('memoryStatus').textContent = `Pairs found: ${memMatches} / ${memoryItems.length}`;
+      memFlipped = [];
+      memLock = false;
+      if(memMatches === memoryItems.length){
+        document.getElementById('memoryStatus').textContent = "All pairs found! 🎉 全部找到了！";
+        earnStar(4);
+      }
+    } else {
+      setTimeout(()=>{
+        f1.el.textContent='❓'; f1.el.classList.remove('flipped'); f1.el.dataset.state='hidden';
+        f2.el.textContent='❓'; f2.el.classList.remove('flipped'); f2.el.dataset.state='hidden';
+        memFlipped = [];
+        memLock = false;
+      }, 800);
+    }
+  }
+}
+</script>
+</body>
+</html>
